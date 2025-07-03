@@ -23,7 +23,7 @@ func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (int,
 	}
 
 	if userFlag {
-		return -1, errors.New("user already exists")
+		return 0, errors.New("user already exists")
 	}
 
 	id, err := s.repo.AddUser(ctx, u)
