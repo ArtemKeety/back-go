@@ -1,14 +1,15 @@
 package handler
 
 import (
+	"github.com/ArtemKeety/back-go.git/internal/service"
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
-	service interface{}
+	service *service.Service
 }
 
-func NewHandler(service interface{}) *Handler {
+func NewHandler(service *service.Service) *Handler {
 	return &Handler{service: service}
 }
 
@@ -18,7 +19,7 @@ func (h *Handler) InitRouter() *mux.Router {
 
 	auth := router.PathPrefix("/auth").Subrouter()
 	{
-		auth.HandleFunc("/sign-up", nil).Methods("POST")
+		auth.HandleFunc("/sign-up", h.singUp).Methods("POST")
 		auth.HandleFunc("/sign-in", nil).Methods("POST")
 		auth.HandleFunc("/test", h.hand_test).Methods("GET")
 	}

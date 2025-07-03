@@ -1,7 +1,7 @@
 package back_go
 
 import (
-	"fmt"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
@@ -19,8 +19,7 @@ func (s *Server) Run(adr string, h http.Handler) error {
 		WriteTimeout:   10 * time.Second,
 	}
 
-	fmt.Println("server is start")
-
+	logrus.Infof("server listening at %s", s.server.Addr)
 	return s.server.ListenAndServe()
 }
 
