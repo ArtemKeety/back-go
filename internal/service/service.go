@@ -8,6 +8,7 @@ import (
 
 type Auth interface {
 	CreateUser(ctx context.Context, u model.UserRequest) (string, error)
+	Login(ctx context.Context, ip string, u model.UserRequest) (map[string]string, error)
 }
 
 type Service struct {

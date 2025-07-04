@@ -11,12 +11,18 @@ type Auth interface {
 	CheckUserExists(ctx context.Context, u model.UserRequest) (model.User, error)
 }
 
+type Session interface {
+	AddSession(ctx context.Context, s model.Session) error
+}
+
 type Repository struct {
 	Auth
+	Session
 }
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		Auth: NewAuthRepo(db),
+		Auth:    NewAuthRepo(db),
+		Session: NewSessionRepository(db),
 	}
 }

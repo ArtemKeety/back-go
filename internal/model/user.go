@@ -1,9 +1,13 @@
 package model
 
-type UserRequest struct {
+type UserData struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`
-	Email    string `json:"email"`
+}
+
+type UserRequest struct {
+	UserData
+	Email string `json:"email"`
 }
 
 type User struct {

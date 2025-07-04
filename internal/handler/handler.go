@@ -20,7 +20,7 @@ func (h *Handler) InitRouter() *mux.Router {
 	auth := router.PathPrefix("/auth").Subrouter()
 	{
 		auth.HandleFunc("/sign-up", h.singUp).Methods("POST")
-		auth.HandleFunc("/sign-in", nil).Methods("POST")
+		auth.HandleFunc("/sign-in", h.singIn).Methods("POST")
 		auth.HandleFunc("/test", h.hand_test).Methods("GET")
 	}
 
