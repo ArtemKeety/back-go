@@ -58,4 +58,6 @@ func NewRefreshToken(guid string) (string, error) {
 	return tokenString, nil
 }
 
-func ParseToken(tokenString string) (*AccessToken, error) {}
+func ParseToken(tokenString string) (string, error) {
+	return "", nil
+}
