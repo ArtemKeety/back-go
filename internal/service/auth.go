@@ -18,12 +18,12 @@ func NewAuthService(repo *repository.Repository) *AuthService {
 
 func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (string, error) {
 
-	userFlag, err := s.repo.CheckUserExists(ctx, u)
+	ex, err := s.repo.CheckUserExists(ctx, u)
 	if err != nil {
 		return "", err
 	}
 
-	if userFlag {
+	if ex.Guid == "" {
 		return "", errors.New("user already exists")
 	}
 

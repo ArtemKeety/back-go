@@ -28,14 +28,15 @@ func (r *AuthRepository) AddUser(ctx context.Context, u model.UserRequest) (stri
 	return guid, nil
 }
 
-func (r *AuthRepository) CheckUserExists(ctx context.Context, u model.UserRequest) (bool, error) {
-	var guid string
-	row := r.db.QueryRowContext(ctx, "SELECT guid FROM users WHERE email = $1 OR login = $2", u.Email, u.Login)
-	if err := row.Scan(&guid); err != nil {
+func (r *AuthRepository) CheckUserExists(ctx context.Context, u model.UserRequest) (model.User, error) {
+	var user model.User
+	row := r.db.QueryRowContext(
+		ctx, "SELECT guid, login, email, password FROM users WHERE email = $1 OR login = $2", u.Email, u.Login)
+	if err := row.Scan(&user.Guid, &user.Login, &user.Email, &user.Password); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return false, nil
+			return user, nil
 		}
-		return false, err
+		return user, err
 	}
-	return true, nil
+	return user, nil
 }

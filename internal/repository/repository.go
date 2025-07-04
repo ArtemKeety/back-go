@@ -8,7 +8,7 @@ import (
 
 type Auth interface {
 	AddUser(ctx context.Context, u model.UserRequest) (string, error)
-	CheckUserExists(ctx context.Context, u model.UserRequest) (bool, error)
+	CheckUserExists(ctx context.Context, u model.UserRequest) (model.User, error)
 }
 
 type Repository struct {
