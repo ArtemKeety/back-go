@@ -7,7 +7,7 @@ import (
 )
 
 type Auth interface {
-	CreateUser(ctx context.Context, u model.UserRequest) (int, error)
+	CreateUser(ctx context.Context, u model.UserRequest) (string, error)
 }
 
 type Service struct {

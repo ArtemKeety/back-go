@@ -8,7 +8,7 @@ import (
 func (h *Handler) getLogger(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			logrus.Infof("method: %s; point: %s; query: %s; address: %s", r.Method, r.URL.Path, r.URL.Query(), r.RemoteAddr)
+			logrus.Infof("method: %s; point: %s; address: %s", r.Method, r.URL.Path, r.RemoteAddr) //r.URL.Query()
 			next.ServeHTTP(w, r)
 		},
 	)

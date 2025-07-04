@@ -22,12 +22,14 @@ func (h *Handler) singUp(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	id, err := h.service.CreateUser(ctx, user)
+	guid, err := h.service.CreateUser(ctx, user)
 	if err != nil {
 		sendError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	sendOk(w, map[string]interface{}{"id": id})
+	sendOk(w, map[string]interface{}{"guid": guid})
 }

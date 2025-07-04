@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/ArtemKeety/back-go.git/internal/model"
 	"github.com/ArtemKeety/back-go.git/internal/repository"
+	"github.com/ArtemKeety/back-go.git/pkg/hashing"
 )
 
 type AuthService struct {
@@ -15,21 +16,25 @@ func NewAuthService(repo *repository.Repository) *AuthService {
 	return &AuthService{repo: repo}
 }
 
-func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (int, error) {
+func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (string, error) {
 
 	userFlag, err := s.repo.CheckUserExists(ctx, u)
 	if err != nil {
-		return -1, err
+		return "", err
 	}
 
 	if userFlag {
-		return 0, errors.New("user already exists")
+		return "", errors.New("user already exists")
 	}
 
-	id, err := s.repo.AddUser(ctx, u)
+	if u.Password, err = hashing.HashPassword(u.Password); err != nil {
+		return "", errors.New("error hashing password")
+	}
+
+	guid, err := s.repo.AddUser(ctx, u)
 	if err != nil {
-		return -1, err
+		return "", err
 	}
 
-	return id, nil
+	return guid, nil
 }
