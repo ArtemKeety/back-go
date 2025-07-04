@@ -23,7 +23,7 @@ func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (stri
 		return "", err
 	}
 
-	if ex.Guid == "" {
+	if ex.Guid != "" {
 		return "", errors.New("user already exists")
 	}
 
