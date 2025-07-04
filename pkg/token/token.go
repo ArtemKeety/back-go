@@ -49,8 +49,9 @@ func NewRefreshToken(guid string) (string, error) {
 		Guid: guid,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, &claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	tokenString, err := token.SignedString(secret)
+
 	if err != nil {
 		return "", err
 	}

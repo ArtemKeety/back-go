@@ -30,7 +30,7 @@ func (s *AuthService) CreateUser(ctx context.Context, u model.UserRequest) (stri
 		return "", errors.New("user already exists")
 	}
 
-	if u.Password, err = hashing.HashString(u.Password); err != nil {
+	if u.Password, err = hashing.HashPassword(u.Password); err != nil {
 		return "", errors.New("error hashing password")
 	}
 
@@ -52,7 +52,7 @@ func (s *AuthService) Login(ctx context.Context, ip string, u model.UserRequest)
 		return nil, errors.New("user does not exist")
 	}
 
-	if !hashing.CheckHash(u.Password, user.Password) {
+	if !hashing.CheckPasswordHash(u.Password, user.Password) {
 		return nil, errors.New("invalid password")
 	}
 
@@ -66,9 +66,9 @@ func (s *AuthService) Login(ctx context.Context, ip string, u model.UserRequest)
 	if err := s.repo.Session.AddSession(
 		ctx,
 		model.Session{
-			Refresh: hashing.HashString(refreshToken),
+			Refresh: refreshToken,
 			Guid:    user.Guid,
-			Time:    time.Now().Add(token.RefreshTime * time.Hour),
+			Time:    time.Now().Add(token.RefreshTime * time.Hour).UTC(),
 			Ip:      ip,
 		}); err != nil {
 		return nil, err
