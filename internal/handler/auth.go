@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/ArtemKeety/back-go.git/internal/model"
 	"net/http"
@@ -45,14 +46,37 @@ func (h *Handler) singIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user model.UserRequest
-	user.UserData = userRequest
-
-	res, err := h.service.Login(ctx, r.RemoteAddr, user)
+	res, err := h.service.Login(ctx, r.RemoteAddr, model.UserRequest{UserData: userRequest})
 	if err != nil {
 		sendError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	sendOk(w, res)
+}
+
+func (h *Handler) Change(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
+	var t model.RequestToken
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	tokenDecoder, err := base64.StdEncoding.DecodeString(t.Token)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	data, err := h.service.ChangeToken(ctx, r.RemoteAddr, string(tokenDecoder))
+	if err != nil {
+		sendError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	sendOk(w, data)
+
 }

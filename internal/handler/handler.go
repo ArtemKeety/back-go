@@ -21,6 +21,7 @@ func (h *Handler) InitRouter() *mux.Router {
 	{
 		auth.HandleFunc("/sign-up", h.singUp).Methods("POST")
 		auth.HandleFunc("/sign-in", h.singIn).Methods("POST")
+		auth.HandleFunc("/change", h.Change).Methods("POST")
 		auth.HandleFunc("/test", h.hand_test).Methods("GET")
 	}
 

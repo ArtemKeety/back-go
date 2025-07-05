@@ -2,6 +2,7 @@ package token
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -42,21 +43,23 @@ func NewAccessToken(guid string) (string, error) {
 }
 
 func NewRefreshToken(guid string) (string, error) {
-	claims := RefreshToken{
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: Issuer,
-		},
-		Guid: guid,
-	}
+	//claims := RefreshToken{
+	//	RegisteredClaims: jwt.RegisteredClaims{
+	//		Issuer: Issuer,
+	//	},
+	//	Guid: guid,
+	//}
+	//
+	//token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
+	//tokenString, err := token.SignedString(secret)
+	//
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//return tokenString, nil
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
-	tokenString, err := token.SignedString(secret)
-
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
+	return uuid.New().String(), nil
 }
 
 func ParseToken(tokenString string) (string, error) {

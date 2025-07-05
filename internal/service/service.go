@@ -11,12 +11,18 @@ type Auth interface {
 	Login(ctx context.Context, ip string, u model.UserRequest) (map[string]string, error)
 }
 
+type Session interface {
+	ChangeToken(ctx context.Context, ip string, token string) (map[string]string, error)
+}
+
 type Service struct {
 	Auth
+	Session
 }
 
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		Auth: NewAuthService(repo),
+		Auth:    NewAuthService(repo),
+		Session: NewSessionService(repo),
 	}
 }

@@ -30,7 +30,7 @@ func main() {
 	h := handler.NewHandler(ser)
 	s := new(backgo.Server)
 
-	if err := s.Run("localhost:8080", h.InitRouter()); err != nil {
+	if err := s.Run(":8080", h.InitRouter()); err != nil {
 		logrus.Fatal(err)
 	}
 

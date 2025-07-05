@@ -13,6 +13,8 @@ type Auth interface {
 
 type Session interface {
 	AddSession(ctx context.Context, s model.Session) error
+	GetByToken(ctx context.Context, t string) (model.Session, error)
+	Update(ctx context.Context, s model.Session) error
 }
 
 type Repository struct {

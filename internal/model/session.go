@@ -9,3 +9,7 @@ type Session struct {
 	Time    time.Time
 	Ip      string
 }
+
+type RequestToken struct {
+	Token string `json:"token"`
+}
