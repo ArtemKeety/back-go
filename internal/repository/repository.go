@@ -15,6 +15,7 @@ type Session interface {
 	AddSession(ctx context.Context, s model.Session) error
 	GetByToken(ctx context.Context, t string) (model.Session, error)
 	Update(ctx context.Context, s model.Session) error
+	DeleteByToken(ctx context.Context, t string) error
 }
 
 type Repository struct {

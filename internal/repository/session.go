@@ -43,3 +43,12 @@ func (r *SessionRepository) GetByToken(ctx context.Context, token string) (model
 	}
 	return s, nil
 }
+
+func (r *SessionRepository) DeleteByToken(ctx context.Context, t string) error {
+	query := `DELETE FROM session WHERE refresh = $1`
+	if _, err := r.db.ExecContext(ctx, query, t); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -33,7 +33,9 @@ func (s *SessionService) ChangeToken(ctx context.Context, ip string, t string) (
 
 	durationTime := session.Time.Sub(time.Now()).Seconds()
 	if durationTime < 0 {
-		// удалить сессию
+		if err := s.repo.Session.DeleteByToken(ctx, t); err != nil {
+			logrus.Errorf("delete session fail %s", err.Error())
+		}
 		return nil, errors.New("session timeout")
 	}
 
