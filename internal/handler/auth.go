@@ -80,3 +80,39 @@ func (h *Handler) Change(w http.ResponseWriter, r *http.Request) {
 	sendOk(w, data)
 
 }
+
+func (h *Handler) LogOut(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+	var t model.RequestToken
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	tokenDecoder, err := base64.StdEncoding.DecodeString(t.Token)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if err := h.service.CloseSession(ctx, string(tokenDecoder)); err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	sendOk(w, map[string]interface{}{"success": "ok"})
+}
+
+func (h *Handler) user(w http.ResponseWriter, r *http.Request) {
+	_, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
+	guid, ok := r.Context().Value("guid").(string)
+	if !ok {
+		sendError(w, http.StatusInternalServerError, "no guid")
+		return
+	}
+
+	sendOk(w, map[string]interface{}{"guid": guid})
+}

@@ -1,6 +1,7 @@
 package token
 
 import (
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"time"
@@ -63,5 +64,21 @@ func NewRefreshToken(guid string) (string, error) {
 }
 
 func ParseToken(tokenString string) (string, error) {
-	return "", nil
+	token, err := jwt.ParseWithClaims(tokenString, &AccessToken{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return secret, nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	claims, ok := token.Claims.(*AccessToken)
+	if !ok || !token.Valid {
+		return "", err
+	}
+
+	return claims.Guid, nil
 }

@@ -23,6 +23,14 @@ func (h *Handler) InitRouter() *mux.Router {
 		auth.HandleFunc("/sign-in", h.singIn).Methods("POST")
 		auth.HandleFunc("/change", h.Change).Methods("POST")
 		auth.HandleFunc("/test", h.hand_test).Methods("GET")
+
+		user := auth.PathPrefix("/user").Subrouter()
+		user.Use(h.userIdentity)
+		{
+			user.HandleFunc("/logout", h.LogOut).Methods("POST")
+			user.HandleFunc("/guid", h.user).Methods("GET")
+		}
+
 	}
 
 	return router
