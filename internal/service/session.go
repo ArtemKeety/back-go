@@ -28,7 +28,13 @@ func (s *SessionService) ChangeToken(ctx context.Context, ip string, t string) (
 	}
 
 	if session.Ip != ip {
-		logrus.Errorf("send webhok %s", session.Ip)
+		logrus.Infof("send webhok %s", session.Ip)
+	}
+
+	durationTime := session.Time.Sub(time.Now()).Seconds()
+	if durationTime < 0 {
+		// удалить сессию
+		return nil, errors.New("session timeout")
 	}
 
 	data := make(map[string]string)
