@@ -63,3 +63,7 @@ func (s *SessionService) ChangeToken(ctx context.Context, ip string, t string) (
 
 	return data, nil
 }
+
+func (s *SessionService) CloseSession(ctx context.Context, t string) error {
+	return s.repo.Session.DeleteByToken(ctx, t)
+}

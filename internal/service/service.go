@@ -13,6 +13,7 @@ type Auth interface {
 
 type Session interface {
 	ChangeToken(ctx context.Context, ip string, token string) (map[string]string, error)
+	CloseSession(ctx context.Context, t string) error
 }
 
 type Service struct {
